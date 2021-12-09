@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-depl
+spec:
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+        - name: client-depl
+          image: haridalavai/client-linklab
+          env:
+            - name: BASE_URL_LOCAL
+              value: "http://ingress-nginx-controller.ingress-nginx.svc.cluster.local"
+            - name: BASE_URL_PROD
+              value: "http://www.okocentral.com/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-srv
+spec:
+  selector:
+    app: client
+  ports:
+    - name: client
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
